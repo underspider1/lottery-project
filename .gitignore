@@ -60,6 +60,11 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+# Django-related
+db.sqlite3
+/static/
+.env  # Or secrets.py,
+local_settings.py
 
 # Flask stuff:
 instance/
