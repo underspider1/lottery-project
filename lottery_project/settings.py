@@ -1,10 +1,4 @@
 import os
-from dotenv import load_dotenv
-load_dotenv()
-
-SECRET_KEY = os.environ['SECRET_KEY']
-
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,8 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = False
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['Churchetto.pythonanywhere.com']
-
+ALLOWED_HOSTS = ['*'] if DEBUG else ['Churchetto.pythonanywhere.com']
 
 # Application definition
 
@@ -71,11 +64,11 @@ WSGI_APPLICATION = "lottery_project.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ['DATABASE_NAME'],
-        'USER': os.environ['DATABASE_USER'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
-        'HOST': os.environ['DATABASE_HOST'],
-        'PORT': '3306', 
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT', '3306'),
     }
 }
 
@@ -116,11 +109,13 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+
+MEDIA_URL = '/media/'  # New
+MEDIA_ROOT = BASE_DIR / 'media'   # New
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
