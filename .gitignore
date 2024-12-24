@@ -20,6 +20,7 @@ node_modules/
 bower_components/
 .npm/
 .eslintcache/
+!staticfiles/admin
 
 # Build/packaging
 build/
