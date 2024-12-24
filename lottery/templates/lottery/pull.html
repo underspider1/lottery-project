@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pull</title>
+</head>
+<body>
+    <h1>Ganyu Banner</h1>
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% elif item %}
+        <p>You won!: {{ item.name }}</p>
+        <img src="{{ item.image_url }}" alt="{{ item.name }}">
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Pull!</button>
+    </form>
+    
+    <a href="{% url 'home' %}">Back Home</a></p>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <base href="/"> {# Or <base href="/your-app-root/"> if needed #}
+  {% load static %}<!-- Include your Firebase initialization scripts and other necessary scripts -->
+  <script src="{% static 'js/firebase-app.js' %}"></script>
+  <script src="{% static 'js/firebase-auth.js' %}"></script>
+  <script src="{% static 'js/firebase-init.js' %}"></script> {# your firebase initialization#}
+</head>
+<body>
+
+<form id="login-form">
+  <input type="email" id="login-email" placeholder="Email" required>
+  <span id="email-error"></span><br>
+  <input type="password" id="login-password" placeholder="Password" required>
+  <span id="password-error"></span><br>
+  <button type="submit">Login</button>
+</form>
+
+
+
+<script src="{% static 'js/signin.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<div class="currency-display">
+        <p>Валюта: <span id="currency-amount">1000</span></p>
+    </div>
+    <div class
+
+</div>
+    <h1>Лотерея Genshin Impact</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="user_name" placeholder="Ваше имя" required>
+        <input type="number" name="ticket_number" placeholder="Номер билета" required>
+        <button type="submit">Участвовать</button>
+    </form>
+    <h2>Участники:</h2>
+   
+<div class="banner-selection">
+    <h3>Выберите баннер</h3>
+    <select id="banner-select" onchange="changeBanner()">
+        <option value="banner1">Баннер 1</option>
+        <option value="banner2">Баннер 2</option>
+        <option value="banner3">Баннер 3</option>
+    </select>
+</div>
+
+<script>
+    function changeBanner() {
+        const selectedBanner = document.getElementById('banner-select').value;
+        // Здесь вы можете написать логику для изменения отображаемого баннера
+        console.log(`Выбран баннер: ${selectedBanner}`);
+    }
+</script>
+   
+    <ul>
+        {% for ticket in tickets %}
+            <li>{{ ticket.user_name }} - Билет №{{ ticket.ticket_number }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1> Drop rates </h1>
+
+<button class="button" id="toggle-button">Шансы выпадения</button>
+<div class="odds-display" id="odds-display">
+    <h3>Шансы выпадения</h3>
+    <ul>
+        <li>Редкие предметы: 10%</li>
+        <li>Уникальные предметы: 30%</li>
+        <li>Обычные предметы: 60%</li>
+    </ul>
+</div>
