@@ -20,7 +20,8 @@ node_modules/
 bower_components/
 .npm/
 .eslintcache/
-!staticfiles/admin
+!staticfiles/admin # Keep this line
+
 
 # Build/packaging
 build/
@@ -33,8 +34,6 @@ dist/
 db.sqlite3
 local_settings.py # Or secrets.py
 .env
-staticfiles/  # For production-collected static files
-# static/  <- Uncomment this ONLY if static/ directory has files not managed by collectstatic
 
 
 # Documentation
