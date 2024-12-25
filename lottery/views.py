@@ -198,16 +198,15 @@ def perform_pull(profile, banner, banner_id):
         # ... existing error handling ...
         return None
 
+    # ... (previous code)
     if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2:
-        profile.guaranteed_featured_5star_character = guaranteed_featured_5star  # Correct indentation
-    elif banner_id == LIMITED_WEAPON_BANNER:  #Correct indentation
-        profile.guaranteed_featured_5star_weapon = guaranteed_featured_5star #Correct indentation
+        profile.guaranteed_featured_5star_character = guaranteed_featured_5star
+    elif banner_id == LIMITED_WEAPON_BANNER:
+        profile.guaranteed_featured_5star_weapon = guaranteed_featured_5star
 
+    profile.save()
+    return item  # Correct indentation (should be outside the if block)
 
-
-
-    profile.save()  # Save AFTER everything else, so that the logic is consistent.
-    return item
 
 
 
