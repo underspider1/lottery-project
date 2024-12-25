@@ -1,17 +1,36 @@
 require('dotenv').config();
 const admin = require('firebase-admin');
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const serviceAccount = require('./lottery-159de-firebase-adminsdk-y7ch8-8f429acc76.json');
 
 admin.initializeApp({
-    credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://lottery-159de-default-rtdb.firebaseio.com"
 });
 
-// Express.js setup (or whatever framework you're using)
 const express = require('express');
 const app = express();
 app.use(express.json()); // Important: To parse JSON request bodies
 
+const createUserLimiter = rateLimit({
+  windowMs: 60 * 1000,  
+  max: 10,               
+  message: { error: "Too many create user requests. Please try again later." }, // JSON error response
+  handler: (req, res, next, options) => { // Custom handler to respond with JSON
+    res.status(options.statusCode).json(options.message);
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+const customTokenLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 30, // Limit each IP to 30 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: { error: "Too many token requests, please try again later."}
+})
 
 async function createCustomToken(uid) {
   try {
@@ -24,7 +43,7 @@ async function createCustomToken(uid) {
 }
 
 // Example route handler to create a new user and return a custom token
-app.post('/createUser', async (req, res) => {
+app.post('/createUser', createUserLimiter, async (req, res) => {
   try {
     const { email, password } = req.body; // Get user credentials from request (validate this data thoroughly!)
 
@@ -44,7 +63,7 @@ app.post('/createUser', async (req, res) => {
 });
 
 // Route to get a custom token for an existing user (important for refreshing tokens)
-app.post('/getCustomToken', async (req, res) => {
+app.post('/getCustomToken', customTokenLimiter, async (req, res) => {
   try {
     const { uid } = req.body;  // Get the user's UID from the request body
 
