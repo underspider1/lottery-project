@@ -39,11 +39,17 @@ except Banner.DoesNotExist:
 
 
 def home_view(request):
-    first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
-    if first_banner:
-        return redirect('pull', banner_id=first_banner.pk)
+    if request.user.is_authenticated: # If user is logged in, redirect to pull. Otherwise, stay at /
+        first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
+        if first_banner:
+            return redirect('pull', banner_id=first_banner.pk)
+        else:
+            # Handle case of no active banners (render a template, redirect elsewhere, etc.)
+            return render(request, 'no_banners.html')
     else:
-        return render(request, 'lottery/no_banners.html')
+        # Example: fetch active banners and display them on the home page
+        banners = Banner.objects.filter(is_active=True)
+        return render(request, 'lottery/home.html', {'banners': banners})
 
 
 @login_required
