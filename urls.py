@@ -1,15 +1,13 @@
-from . import views
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Include this line
-    path('', views.home_view, name='home'),
-    path('/admin/', include('lottery_project.urls'))
-    path('pull/<int:banner_id>/', views.pull_view, name='pull'), 
-    path('inventory/', views.inventory_view, name='inventory'),
+    path('admin/', admin.site.urls),
+    path('', views.home_view, name='home'), 
+    path('', include('lottery.urls')),
 ]
 
 if settings.DEBUG:
