@@ -4,7 +4,8 @@ from .models import Banner, Item, UserInventory, Profile
 import random
 from django.contrib import messages
 
-first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
+def home_view(request):
+    first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
     if first_banner:
         return redirect('pull', banner_id=first_banner.pk)  # Redirect to the first banner's pull view
     else:
