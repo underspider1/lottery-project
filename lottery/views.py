@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse  # For AJAX responses
 from .models import Banner, Item, UserInventory, Profile
 import random
 from django.contrib import messages
@@ -31,15 +32,18 @@ def pull_view(request, banner_id):
             for _ in range(num_pulls):
                 pulled_item = perform_pull(profile, banner)
                 if pulled_item:
-                    items_pulled.append(pulled_item)
-                    # ... (add to inventory logic as before)
-
-            return render(request, 'lottery/pull.html', {'items': items_pulled, 'banner': banner})
+                    return JsonResponse({'name': pulled_item.name, 'image_url': pulled_item.image_url, 'rarity': pulled_item.rarity}) # Return JSON response with item data
+                else:
+                    return JsonResponse({'error': 'No item found for this rarity or no item pulled.'}, status=500)  # Or similar error handling
+                
+                return render(request, 'lottery/pull.html', {'items': items_pulled, 'banner': banner})
         else:
             messages.error(request, 'Not enough gems!')
             return render(request, 'lottery/pull.html', {'banner': banner})  # Return to pull page with error
 
-    return render(request, 'lottery/pull.html', {'banner': banner})  # Initial GET request
+    return render(request, 'lottery/pull.html', {'banner': banner})# Initial GET request
+
+
 
 def perform_pull(profile, banner): #Helper function for a single pull
     if profile.pity_counter >= 90:
