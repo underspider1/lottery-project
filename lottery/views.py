@@ -187,11 +187,17 @@ def perform_pull(profile, banner, banner_id):
 
 
 
-        if rarity != 5: #Update pity for non 5 stars, 5 star pity is handled earlier.
-            # existing logic for pity counter update
-        #Correct placement: Update guarantees AFTER updating pity, but before saving the profile.
-        profile.guaranteed_featured_4star = guaranteed_featured_4star
-        profile.guaranteed_4star_or_above = guaranteed_4star_or_above
+        if rarity != 5:  #Correct indentation and placement. Update pity AFTER guaranteed_4star_or_above is handled.
+            if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2:
+                profile.character_pity_counter += 1
+            elif banner_id == LIMITED_WEAPON_BANNER:
+                profile.weapon_pity_counter += 1
+            elif banner_id == STANDARD_BANNER:
+                profile.standard_pity_counter += 1
+
+        # Update guarantees AFTER item selection, pity updates, and guaranteed_4star_or_above logic.
+        profile.guaranteed_featured_4star = guaranteed_featured_4star  # Correct placement
+        profile.guaranteed_4star_or_above = guaranteed_4star_or_above  # Correct placement and update logic
 
 
     except IndexError as e:
