@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),  # Include this line
     path('', views.home_view, name='home'),
+    path('/admin/', include('lottery_project.urls'))
     path('pull/<int:banner_id>/', views.pull_view, name='pull'), 
     path('inventory/', views.inventory_view, name='inventory'),
 ]
