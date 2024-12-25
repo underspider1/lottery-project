@@ -11,14 +11,14 @@
     <script src="{% static 'js/firebase-init.js' %}"></script> 
 </head>
 <body>
-    {% block content %} <!--- Wrap your content in a block -->
-<form id="register-form">
-    <input type="email" id="register-email" placeholder="Email" required> <span id="email-error"></span><br>
-    <input type="password" id="register-password" placeholder="Password" required> <span id="password-error"></span><br>
-    <button type="submit">Signup</button>
-</form>
-
-<script src="{% static 'js/register.js' %}"></script>
+    {% block content %}
+    <form id="register-form" method="post">
+        {% csrf_token %}
+        <input type="email" id="register-email" placeholder="Email" required> <span id="email-error"></span><br>
+        <input type="password" id="register-password" placeholder="Password" required> <span id="password-error"></span><br>
+        <button type="submit">Signup</button>
+    </form>
+    <script src="{% static 'js/register.js' %}"></script>
     {% endblock %}
 </body>
 </html>

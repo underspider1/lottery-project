@@ -1,20 +1,4 @@
-const banners = { // Updated banners with 4-star characters
-    1: {
-        characters5: ['Yoimiya', 'Tartaglia'],
-        weapons5: [], // No 5-star weapons on this banner
-        characters4: ['Faruzan', 'Collei', 'Yun Jin', 'Kuki Shinobu', 'Heizou', 'Gorou', 'Dori', 'Candace', 'Layla', 'Sayu', 'Yaoyao', 'Mika', 'Kaveh', 'Kirara', 'Freminet', 'Lynette', 'Chevreuse', 'Charlotte', 'Gaming', 'Sethos', 'Xingqiu', 'Sucrose', 'Noelle', 'Chongyun', 'Beidou', 'Fischl', 'Bennett', 'Razor', 'Barbara', 'Diona', 'Xinyan', 'Rosaria', 'Yanfei', 'Sara', 'Ororon', 'Kachina']
-    },
-    2: {
-        characters5: [], // No 5-star characters on this banner
-        weapons5: ['Thundering Pulse', 'Polar Star'],
-        characters4: ['Faruzan', 'Collei', 'Yun Jin', 'Kuki Shinobu', 'Heizou', 'Gorou', 'Dori', 'Candace', 'Layla', 'Sayu', 'Yaoyao', 'Mika', 'Kaveh', 'Kirara', 'Freminet', 'Lynette', 'Chevreuse', 'Charlotte', 'Gaming', 'Sethos', 'Xingqiu', 'Sucrose', 'Noelle', 'Chongyun', 'Beidou', 'Fischl', 'Bennett', 'Razor', 'Barbara', 'Diona', 'Xinyan', 'Rosaria', 'Yanfei', 'Sara', 'Ororon', 'Kachina']
-    },
-    3: {
-        characters5: ['Dehya', 'Diluc', 'Mona', 'Jean', 'Tighnary', 'Qiqi', 'Keqing'],
-        weapons5: ['Skyward Atlas', 'Skyward Spine', 'Skyward Pride', 'Skyward Blade', 'Amos\' Bow', 'Lost Prayer to the Sacred Winds', 'Primordial Jade Winged-Spear', 'Wolf\'s Gravestone', 'Aquila Favonia', 'Skyward Harp'],
-        characters4: ['Faruzan', 'Collei', 'Yun Jin', 'Kuki Shinobu', 'Heizou', 'Gorou', 'Dori', 'Candace', 'Layla', 'Sayu', 'Yaoyao', 'Mika', 'Kaveh', 'Kirara', 'Freminet', 'Lynette', 'Chevreuse', 'Charlotte', 'Gaming', 'Sethos', 'Xingqiu', 'Sucrose', 'Noelle', 'Chongyun', 'Beidou', 'Fischl', 'Bennett', 'Razor', 'Barbara', 'Diona', 'Xinyan', 'Rosaria', 'Yanfei', 'Sara', 'Ororon', 'Kachina']
-    },
-};
+import banners from './banners.js';
 
 document.getElementById('spin-button').addEventListener('click', async function () {
     const bannerId = document.getElementById('banner-select').value;
@@ -70,6 +54,23 @@ document.getElementById('spin-button').addEventListener('click', async function 
     }
 });
 
+function updateInventoryList(bannerId){ // Function to update the list. Add this function to pull.js
+    const inventoryList = document.getElementById(`inventory-list-${bannerId}`); // Use banner specific id
+    if(!inventoryList) return; // Doesn't exist
+    inventoryList.innerHTML = ''; // Clear list first
+    const inventory = JSON.parse(localStorage.getItem('inventory')) || {};
+    if(inventory[bannerId]){
+        inventory[bannerId].forEach(item => {
+            const listItem = document.createElement('li');
+            if(item.image_url)
+                listItem.innerHTML = `<img src="${item.image_url}" alt="${item.character || item.weapon}" width="50"> ${item.character || item.weapon} (Rarity: ${item.rarity})`;
+            else
+                listItem.textContent = `${item.character || item.weapon} (Rarity: ${item.rarity})`;
+            inventoryList.appendChild(listItem);
+        });
+    }
+}
+
 function addToInventory(character, weapon, bannerId, rarity) {
     try {
         let inventory = JSON.parse(localStorage.getItem('inventory')) || {};
@@ -78,6 +79,7 @@ function addToInventory(character, weapon, bannerId, rarity) {
         }
         inventory[bannerId].push({ character, weapon, rarity });
         localStorage.setItem('inventory', JSON.stringify(inventory));
+        updateInventoryList(bannerId);
     } catch (error) { // The catch block is now *inside* the function
         console.error("Error updating inventory:", error);
         document.getElementById('result').textContent = 'An error occurred while updating your inventory. Please try again later or contact support if this issue persists.';

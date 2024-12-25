@@ -6,6 +6,14 @@ import * as firebaseui from 'firebaseui';
 // This initialization can remain outside the onAuthStateChanged callback.
 const ui = new firebaseui.auth.AuthUI(getAuth());
 
+const userSpecificPullButton = document.getElementById('user-pull-button');
+if (userSpecificPullButton) {  // Add this check to avoid errors
+    const bannerId = userSpecificPullButton.dataset.bannerId;
+    userSpecificPullButton.addEventListener('click', () => {
+        window.location.href = `/pull/${bannerId}`;
+    });
+}
+
 const uiConfig = {
     callbacks: {
         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
@@ -30,8 +38,12 @@ const auth = getAuth();
 onAuthStateChanged(getAuth(), (user) => {
     const authFormContainer = document.getElementById('auth-form-container');
     if (user) {
+        if (window.location.pathname === '/login' || window.location.pathname === '/register') { // Check if redirected from login page
+            window.location.pathname = '/'; // Redirect logged-in user away from login page
+        }
         // User is signed in, hide FirebaseUI container (if it exists)
         const firebaseUiContainer = document.getElementById('firebaseui-auth-container');
+        
 
         if (firebaseUiContainer) {
             firebaseUiContainer.style.display = 'none';

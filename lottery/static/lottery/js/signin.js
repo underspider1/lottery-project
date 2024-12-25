@@ -12,7 +12,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             // Signed in 
             console.log("User signed in:", userCredential.user);
             // Redirect, update UI, etc., based on successful login
-            window.location.href = "{% url 'home' %}";
+            window.location.pathname = '/';
 
         })
         .catch((error) => {

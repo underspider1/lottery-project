@@ -1,6 +1,7 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 document.getElementById('register-form').addEventListener('submit', function(event) {
+    
     event.preventDefault(); // Prevent default form submission
 
     const email = document.getElementById('register-email').value;
@@ -14,7 +15,7 @@ document.getElementById('register-form').addEventListener('submit', function(eve
             console.log("User registered:", userCredential.user); // For debugging
             // Example redirect:
             // window.location.href = '/profile'; // Redirect to a profile page after registration.
-
+            window.location.pathname = '/';
         })
         .catch((error) => {
             const errorCode = error.code;

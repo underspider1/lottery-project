@@ -7,7 +7,7 @@ document.getElementById('logout-button').addEventListener('click', function() {
             // Sign-out successful.
             console.log("User signed out");
             // Redirect to home or login page after logout:
-            window.location.href = '/'; // Or '/login/' or '{% url 'login' %}'
+            window.location.pathname = '/'; // Or '/login/' or '{% url 'login' %}'
         })
         .catch((error) => {
             console.error("Sign-out error:", error);  // Log the error for debugging.
