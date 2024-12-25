@@ -39,7 +39,7 @@ const banners = { // Updated banners with 4-star characters
         "featured5starRate": 0.0035, // Half of the regular 5-star rate to represent the 50/50 chance
         "featured4starRate": 0.03, // Half of regular 4 star
     },
-    4: { // Standart Banner
+    4: { // Wanderlust Invocation
         characters5: ['Dehya', 'Diluc', 'Mona', 'Jean', 'Tighnary', 'Qiqi', 'Keqing'],
         weapons5: ['Amos Bow', 'Lost Prayer to the Sacred Winds', 'Primordial Jade Winged-Spear', 'Wolf`s Gravestone', 'Aquila Favonia', 'Skyward Harp'],
         characters4: ['Faruzan', 'Collei', 'Yun Jin', 'Kuki Shinobu', 'Heizou', 'Gorou', 'Dori', 'Candace', 'Layla', 'Sayu', 'Yaoyao', 'Mika', 'Kaveh', 'Kirara', 'Freminet', 'Lynette', 'Chevreuse', 'Charlotte', 'Gaming', 'Sethos', 'Xingqiu', 'Sucrose', 'Noelle', 'Chongyun', 'Beidou', 'Fischl', 'Bennett', 'Razor', 'Barbara', 'Diona', 'Xinyan', 'Rosaria', 'Yanfei', 'Sara', 'Ororon', 'Kachina'],
