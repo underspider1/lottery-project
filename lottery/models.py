@@ -29,6 +29,7 @@ class Banner(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    is_promoted = models.BooleanField(default=False)
 
     RARITY_CHOICES = [  # New: Define rarity choices
         (3, 'Three Star'),
