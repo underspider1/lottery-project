@@ -11,6 +11,8 @@ LIMITED_CHARACTER_BANNER_2 = 2
 LIMITED_WEAPON_BANNER = 3
 STANDARD_BANNER = 4
 
+STANDARD_BANNER = Banner.objects.get(name="Standard")
+
 # Cache the standard banner instance *outside* the view functions
 try:  # Check if the banner already exists
     standard_banner = Banner.objects.get(name="Standard")
@@ -35,7 +37,6 @@ except Banner.DoesNotExist:
         item3.save()
     standard_banner.items.add(item1, item2, item3) # Now items are associated with standard_banner
 
-STANDARD_BANNER = Banner.objects.get(name="Standard")
 
 def home_view(request):
     first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
