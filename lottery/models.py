@@ -7,6 +7,10 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     balance = models.IntegerField(default=0)
     pity_counter = models.IntegerField(default=0)
+    
+    class Meta:
+        app_label = 'lottery'
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
