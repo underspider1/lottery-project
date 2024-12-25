@@ -1,8 +1,8 @@
 <nav>
     <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'inventory' %}">Inventory</a>
-    <a href="{% url 'pull' %}">Pull</a>
     {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}">Logout</a>  {# Example logout link #}
+        <a href="{% url 'logout' %}">Logout</a> 
+        <a href="{% url 'pull' banner_id=1 %}">Pull banner 1</a> <!---  Provide a banner_id -->
     {% endif %}
 </nav>
