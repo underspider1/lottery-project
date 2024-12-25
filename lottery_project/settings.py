@@ -1,8 +1,14 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Add this if you have static files in a project-level 'static' dir
+]
 
 
 # Quick-start development settings - unsuitable for production
@@ -41,10 +47,10 @@ ROOT_URLCONF = 'lottery.urls'
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
+        'BACKEND': "django.template.backends.django.DjangoTemplates",
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",

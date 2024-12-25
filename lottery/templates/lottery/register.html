@@ -1,13 +1,17 @@
+{% extends 'base.html' %}
 
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="/">  </head>
+    <base href="/"> 
     <title>Signup</title>
-    {% load static %} <!-- Include Firebase SDK and your initialization script -->
-    <script src="{% static 'js/firebase-app.js' %}"></script> <script src="{% static 'js/firebase-auth.js' %}"></script>
+    {% load static %} 
+    <script src="{% static 'js/firebase-app.js' %}"></script>
+    <script src="{% static 'js/firebase-auth.js' %}"></script>
     <script src="{% static 'js/firebase-init.js' %}"></script> 
+</head>
 <body>
+    {% block content %} <!--- Wrap your content in a block -->
 <form id="register-form">
     <input type="email" id="register-email" placeholder="Email" required> <span id="email-error"></span><br>
     <input type="password" id="register-password" placeholder="Password" required> <span id="password-error"></span><br>
@@ -15,6 +19,6 @@
 </form>
 
 <script src="{% static 'js/register.js' %}"></script>
-
+    {% endblock %}
 </body>
 </html>

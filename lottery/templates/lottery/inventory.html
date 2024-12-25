@@ -1,8 +1,12 @@
-<!DOCTYPE = html>
-<html lang="en">
- 
+{% extends 'base.html' %}  <!--- Add this line -->
 
+<!DOCTYPE html>
+<html lang="en">
+<body>  </body>
+    {% block content %} <!--- Wrap your content in a block -->
 <div id="inventory-container">
     <h3>Your items</h3>
     <ul id="inventory-list"></ul>
 </div>
+    {% endblock %}
+</html>
