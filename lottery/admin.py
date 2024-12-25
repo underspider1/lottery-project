@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Banner, Item, UserInventory  # Import your models
+from lottery.models import Profile, Banner, Item, UserInventory  # Import your models
 
 @admin.register(Profile)  # Use decorator for registration
 class ProfileAdmin(admin.ModelAdmin):
