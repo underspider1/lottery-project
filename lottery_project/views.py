@@ -35,9 +35,7 @@ except Banner.DoesNotExist:
         item3.save()
     standard_banner.items.add(item1, item2, item3) # Now items are associated with standard_banner
 
-STANDARD_BANNER = standard_banner #Correct cache
-
-
+STANDARD_BANNER = Banner.objects.get(name="Standard")
 
 def home_view(request):
     first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
