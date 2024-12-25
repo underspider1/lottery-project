@@ -12,7 +12,31 @@ LIMITED_WEAPON_BANNER = 3
 STANDARD_BANNER = 4
 
 # Cache the standard banner instance *outside* the view functions
-STANDARD_BANNER = Banner.objects.get(name="Standard")
+try:  # Check if the banner already exists
+    standard_banner = Banner.objects.get(name="Standard")
+except Banner.DoesNotExist:
+    standard_banner = Banner(name="Standard")
+    standard_banner.save() # You need to save the instance before calling ManyToMany methods.
+    # Create necessary items, if they don't exist. Otherwise this code will throw DoesNotExist.
+    try:
+        item1 = Item.objects.get(name="Some 5* Item") #Example 5* item. It must exist in your database.
+    except Item.DoesNotExist:
+        item1 = Item(name="Some 5* Item", rarity=5, banner=standard_banner) #Create if it does not exist.
+        item1.save()
+    try:
+        item2 = Item.objects.get(name="Some 3* Item")  # Example 3* item
+    except Item.DoesNotExist:
+        item2 = Item(name="Some 3* Item", rarity=3, banner=standard_banner) # Banner must be passed, since it is not null
+        item2.save()
+    try:
+        item3 = Item.objects.get(name="Some 4* Item") #Example 4* item, is_promoted=True. Must exist in your database.
+    except Item.DoesNotExist:
+        item3 = Item(name="Some 4* Item", rarity=4, is_promoted=True, banner=standard_banner)
+        item3.save()
+    standard_banner.items.add(item1, item2, item3) # Now items are associated with standard_banner
+
+STANDARD_BANNER = standard_banner #Correct cache
+
 
 
 def home_view(request):
