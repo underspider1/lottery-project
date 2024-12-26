@@ -226,8 +226,8 @@ def perform_pull(profile, banner):
         if rarity != 5 and profile.guaranteed_4star_or_above < 9:       
 
         # Update guarantees AFTER item selection, pity updates, and guaranteed_4star_or_above logic.
-    profile.guaranteed_featured_4star = guaranteed_featured_4star  # Correct placement
-    profile.guaranteed_4star_or_above = guaranteed_4star_or_above  # Correct placement and update logic
+         profile.guaranteed_featured_4star = guaranteed_featured_4star  # Correct placement
+         profile.guaranteed_4star_or_above = guaranteed_4star_or_above  # Correct placement and update logic
 
 
     except IndexError as e:
