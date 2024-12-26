@@ -1,7 +1,9 @@
 import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lottery_project.settings") 
 import sys
 from pathlib import Path
-
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
 from dotenv import load_dotenv  #For loading .env file.
 
 load_dotenv() # Call this function here
@@ -16,9 +18,4 @@ sys.path.append(str(PROJECT_ROOT / "lottery_project"))
 sys.path.append(str(PROJECT_ROOT / "lottery_project/.venv/lib/python3.10/site-packages"))  # Add virtual env path. This line depends on where PythonAnywhere puts your virtual environment files.
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lottery_project.settings")  #PythonAnywhere might use some other settings, but this should also be fine
-
-
-from django.core.wsgi import get_wsgi_application
-
-application = get_wsgi_application()
+ #PythonAnywhere might use some other settings, but this should also be fine
