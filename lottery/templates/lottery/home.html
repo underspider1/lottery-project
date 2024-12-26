@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> The Funny Roulette </title>
+    <title> The Wish Simulating Roulette </title>
     <base href="/">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -15,7 +15,6 @@
     <p>Welcome to the Pull Zone!</p>
     <ul>
         {% for banner in active_banners %}  
-          <li>
             <li><a href="{% url 'pull' banner.id %}">{{ banner.name }}</a></li>
         {% empty %}  <!-- Pass banner.id to the url tag -->
             <li>No banners are currently active.</li>
