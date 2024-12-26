@@ -5,7 +5,7 @@ from lottery.models import Banner, Item, UserInventory, Profile, BannerType
 import random
 from django.contrib import messages
 
-STANDARD_BANNER = Banner.objects.get(name="Standard")
+#STANDARD_BANNER = Banner.objects.get(name="Standard")
 
 # Cache the standard banner instance *outside* the view functions
 #try:  # Check if the banner already exists
@@ -33,11 +33,9 @@ STANDARD_BANNER = Banner.objects.get(name="Standard")
 
 
 def home_view(request):
-    first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
-    if first_banner:
-        return redirect('pull', banner_type=first_banner.pk)
-    else:
-        return render(request, 'no_banners.html')
+    active_banners = Banner.objects.filter(is_active=True)  # Get all active banners
+    context = {'active_banners': active_banners}  # Pass them to the template
+    return render(request, 'lottery/home.html', context)  # New template: home.html
 
 
 @login_required
@@ -139,7 +137,7 @@ def perform_pull(profile, banner):
         if rarity == 5:
 
             if banner.banner_type == BannerType.STANDARD: # Correct placement. If banner is standard, use items from standard banner
-                standard_banner = Banner.objects.get(banner_type=BannerType.STANDARD)
+                standard_banner = get_object_or_404 (Banner, banner_type=BannerType.STANDARD) #Banner.objects.get(banner_type=BannerType.STANDARD)
                 item = random.choice(standard_banner.items.filter(rarity=5))
             elif random.random() < 0.5 or guaranteed_featured_5star:
                 try:
