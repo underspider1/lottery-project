@@ -8,12 +8,15 @@ from django.contrib import messages
 #STANDARD_BANNER = Banner.objects.get(name="Standard")
 
 def home_view(request):
-    banners = Banner.objects.all()  # Correct: assign to 'banners'
-    # Remove initial data creation from home_view. This should be done in migrations.
+    banners = Banner.objects.all()  # Assign to 'banners', not the Banner class.
+    active_banners = Banner.objects.all() # Try getting all banners
+    
+    for b in active_banners: #Simple check
+        print(f"Banner in active_banners: {b.name=}") # Check in your pythonanywhere console if this line gets printed
+    # Get all active banners, or use some other logic to select banners to display
 
-    active_banners = banners.objects.filter(is_active=True) # Get all active banners, or use some other logic to select banners to display
-    context = {'active_banners': active_banners} 
-    return render(request, 'lottery/home.html', context)
+    context = {'active_banners': active_banners}  # Corrected context variable name
+    return render(request, 'lottery/home.html', context) # Return a template using banners
     #active_banners = Banner.objects.filter(is_active=True)  # Get all active banners
     #context = {'active_banners': active_banners}  # Pass them to the template
     #return render(request, 'lottery/home.html', context)  # New template: home.html
