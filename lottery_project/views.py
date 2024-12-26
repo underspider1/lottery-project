@@ -1,14 +1,16 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404  # Removed unused redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from lottery.models import Banner, Item, UserInventory, Profile, BannerType
+from lottery.models import Banner, UserInventory, BannerType  # Removed unused imports
 import random
 from django.contrib import messages
+import logging
+
+logger = logging.getLogger(__name__) # Get logger for the module.
 
 #STANDARD_BANNER = Banner.objects.get(name="Standard")
 
 def home_view(request):
-    banners = Banner.objects.all()  # Assign to 'banners', not the Banner class.
     active_banners = Banner.objects.all() # Try getting all banners
     
     for b in active_banners: #Simple check
@@ -118,21 +120,24 @@ def perform_pull(profile, banner):
             rarity = 3
             
     try:
-        if rarity == 5:
+        standard_banner = get_object_or_404(Banner, banner_type=BannerType.STANDARD)
 
-            if banner.banner_type == BannerType.STANDARD: # Correct placement. If banner is standard, use items from standard banner
-                standard_banner = get_object_or_404(Banner, banner_type=BannerType.STANDARD)  #Banner.objects.get(banner_type=BannerType.STANDARD)
+
+        if rarity == 5:
+        if banner.banner_type == BannerType.STANDARD: 
+            item = random.choice(standard_banner.items.filter(rarity=5))
+
+        elif random.random() < 0.5 or guaranteed_featured_5star:
+            try:
+                item = random.choice(banner.featured.items.all().filter (rarity=5)) # Pick a featured 5* item.
+            except IndexError:
                 item = random.choice(standard_banner.items.filter(rarity=5))
-            elif random.random() < 0.5 or guaranteed_featured_5star:
-                try:
-                    item = random.choice(banner.featured.items.all().filter (rarity=5))
-                except IndexError:
-                    item = random.choice(standart_banner.items.filter(rarity=5)) # Use the cached banner.
-                guaranteed_featured_5star = False
-            else:
-                standard_banner = Banner.objects.get(banner_type=BannerType.STANDARD)
-                item = random.choice(standart_banner.items.filter(rarity=5)) # Use cached banner.
-                guaranteed_featured_5star = True
+            guaranteed_featured_5star = False
+            logger.exception("IndexError during item selection") # Correct and better error handling
+            return None       
+        else: # Lost 50/50
+            item = random.choice(standard_banner.items.filter(rarity=5))
+            guaranteed_featured_5star = True
 
             # Reset pity after selecting an item.
             if banner_type == BannerType.LIMITED_CHARACTER:
@@ -157,12 +162,12 @@ def perform_pull(profile, banner):
                 guaranteed_featured_4star = True  # Guarantee next 4* is featured
 
         elif rarity == 3:
-            item = random.choice(banner.items.filter(rarity=3))
+            item = random.choice(banner.items.filter(rarity=3))  #Correct indentation
         else:
             return None
 
 
-        if guaranteed_4star_or_above > 0:  #Check if guarantee is active
+        if guaranteed_4star_or_above > 0:
             if rarity == 4 or rarity == 5:  # Correct condition: reset only if 4* or 5* is pulled
                 profile.guaranteed_4star_or_above = 0  # Correct logic and placement.
         elif guaranteed_4star_or_above == 9 and rarity == 3:  # Correct condition and placement. Guaranteed 4* or 5* on the next pull
@@ -191,7 +196,8 @@ def perform_pull(profile, banner):
 
 
 
-        if rarity != 5 and profile.guaranteed_4star_or_above < 9:     #Correct indentation and placement. Update pity AFTER guaranteed_4star_or_above is handled.
+        if rarity != 5 and profile.guaranteed_4star_or_above < 9:
+            #Correct indentation and placement. Update pity AFTER guaranteed_4star_or_above is handled.
             if banner.banner_type == BannerType.LIMITED_CHARACTER:
                 profile.character_pity_counter += 1
             elif banner.banner_type == BannerType.LIMITED_WEAPON:
@@ -208,12 +214,15 @@ def perform_pull(profile, banner):
         if rarity != 5 and profile.guaranteed_4star_or_above < 9:       
 
         # Update guarantees AFTER item selection, pity updates, and guaranteed_4star_or_above logic.
-         profile.guaranteed_featured_4star = guaranteed_featured_4star  # Correct placement
-         profile.guaranteed_4star_or_above = guaranteed_4star_or_above  # Correct placement and update logic
+        profile.guaranteed_featured_4star = guaranteed_featured_4star  
+         # Correct placement
+        profile.guaranteed_4star_or_above = guaranteed_4star_or_above 
+         # Correct placement and update logic
 
 
-    except IndexError as e:
+    except Exception as e:  # Catching a broad Exception is generally fine for top-level error handling
         # ... existing error handling ...
+        logger.exception("An unexpected error occurred during item pulling: %s", e) 
         return None
 
     # ... (previous code)
