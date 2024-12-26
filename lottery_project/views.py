@@ -8,7 +8,7 @@ from django.contrib import messages
 STANDARD_BANNER = Banner.objects.get(name="Standard")
 
 # Cache the standard banner instance *outside* the view functions
-try:  # Check if the banner already exists
+#try:  # Check if the banner already exists
     standard_banner = Banner.objects.get(name="Standard")
 except Banner.DoesNotExist:
     standard_banner = Banner(name="Standard")
