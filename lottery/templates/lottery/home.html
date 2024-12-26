@@ -8,7 +8,7 @@
    
 <ul>
         {% for banner in active_banners %}  
-            <li><a href="{% url 'pull' banner.id %}">{{ banner.name }}</a></li>
+            <li><a href="{% url 'lottery:pull' banner.id %}">{{ banner.name }}</a></li>
         {% empty %}  <!-- Pass banner.id to the url tag -->
             <li>No banners are currently active.</li>
         {% endfor %}
