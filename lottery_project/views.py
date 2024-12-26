@@ -33,9 +33,16 @@ from django.contrib import messages
 
 
 def home_view(request):
-    active_banners = Banner.objects.filter(is_active=True)  # Get all active banners
-    context = {'active_banners': active_banners}  # Pass them to the template
-    return render(request, 'lottery/home.html', context)  # New template: home.html
+    banners = Banner.objects.all()
+if banners.count() == 0:
+    print("No banners exist.") #Check in your pythonanywhere server log is this is printed
+
+for b in Banner.objects.all():
+    print(f"Banner '{b.name}': {b.banner_type=}") #Check banner_type
+    
+    #active_banners = Banner.objects.filter(is_active=True)  # Get all active banners
+    #context = {'active_banners': active_banners}  # Pass them to the template
+    #return render(request, 'lottery/home.html', context)  # New template: home.html
 
 
 @login_required

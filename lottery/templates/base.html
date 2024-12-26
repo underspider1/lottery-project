@@ -1,11 +1,24 @@
-<nav>
-    <script>
-        const csrfToken = "{{ csrf_token }}"; // Add this in a <script> block in your template
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!--- Inside <head> -->
+</head>
+<body>
+    <nav>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+
+    {% csrf_token %} <!--- CSRF Token directly in template -->
+    <script>  <!--- Just before the closing </body> tag -->
+        const csrftoken = "{{ csrf_token }}";
     </script>
-    <a href="{% url 'home' %}">Home</a>
-    <a href="{% url 'inventory' %}">Inventory</a>
-    {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}">Logout</a>  {# Example logout link #}
-    {% endif %}
-</nav>
-T
+
+    <script src="{% static 'js/my_script.js' %}"></script> <!--- JavaScript files at the end of the body -->
+</body>
+</html>

@@ -2,11 +2,19 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<body>  </body>
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inventory</title>  <!-- Add a title -->
+        {% load static %}  <!-- Load static if using static files -->
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Example: link your CSS -->
+</head>
+<body>
     {% block content %} <!--- Wrap your content in a block -->
-<div id="inventory-container">
+  <div id="inventory-container">
     <h3>Your items</h3>
     <ul id="inventory-list"></ul>
-</div>
+  </div>
     {% endblock %}
+</body>
 </html>
