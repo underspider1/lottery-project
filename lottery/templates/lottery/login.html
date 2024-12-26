@@ -1,26 +1,15 @@
 {% extends 'base.html' %}
+{% block title %}Login{% endblock %}  <!--- Set the title for the login page -->
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login</title>
-  <base href="/"> 
-  {% load static %}
-  <script src="{% static 'js/firebase-app.js' %}"></script>
-  <script src="{% static 'js/firebase-auth.js' %}"></script>
-  <script src="{% static 'js/firebase-init.js' %}"></script> 
-</head>
-<body>
-    {% block content %}
-    <form id="login-form" method="post">
-            {% csrf_token %}
-            <input type="email" id="login-email" placeholder="Email" required>
-            <span id="email-error"></span><br>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <span id="password-error"></span><br>
-            <button type="submit">Login</button>
+{% block content %}
+
+<form id="login-form" method="post"> <!--- No action needed if posting to the same URL -->
+    {% csrf_token %}
+    <input type="email" id="login-email" placeholder="Email" required>
+    <span id="email-error"></span><br>
+    <input type="password" id="login-password" placeholder="Password" required>
+    <span id="password-error"></span><br>
+    <button type="submit">Login</button> <!--- Submit button for the form -->
 </form>
-<script src="{% static 'js/signin.js' %}"></script>
-    {% endblock %}
-</body>
-</html>
+<script src="{% static 'js/signin.js' %}" type="module"></script> <!--- Load your signin JavaScript -->
+{% endblock content %}
