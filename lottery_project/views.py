@@ -7,39 +7,13 @@ from django.contrib import messages
 
 #STANDARD_BANNER = Banner.objects.get(name="Standard")
 
-# Cache the standard banner instance *outside* the view functions
-#try:  # Check if the banner already exists
-    #standard_banner = Banner.objects.get(name="Standard")
-#except Banner.DoesNotExist:
-    #standard_banner = Banner(name="Standard")
-    #standard_banner.save() # You need to save the instance before calling ManyToMany methods.
-    # Create necessary items, if they don't exist. Otherwise this code will throw DoesNotExist.
-    #try:
-        #item1 = Item.objects.get(name="Some 5* Item") #Example 5* item. It must exist in your database.
-    #except Item.DoesNotExist:
-        #item1 = Item(name="Some 5* Item", rarity=5, banner=standard_banner) #Create if it does not exist.
-        #item1.save()
-    #try:
-        #item2 = Item.objects.get(name="Some 3* Item")  # Example 3* item
-    #except Item.DoesNotExist:
-        #item2 = Item(name="Some 3* Item", rarity=3, banner=standard_banner) # Banner must be passed, since it is not null
-        #item2.save()
-    #try:
-        #item3 = Item.objects.get(name="Some 4* Item") #Example 4* item, is_promoted=True. Must exist in your database.
-    #except Item.DoesNotExist:
-        #item3 = Item(name="Some 4* Item", rarity=4, is_promoted=True, banner=standard_banner)
-        #item3.save()
-    #standard_banner.items.add(item1, item2, item3) # Now items are associated with standard_banner
-
-
 def home_view(request):
-    Banner = Banner.objects.all()
-if banner.count() == 0:
-    print("No banners exist.") #Check in your pythonanywhere server log is this is printed
+    banners = Banner.objects.all()  # Correct: assign to 'banners'
+    # Remove initial data creation from home_view. This should be done in migrations.
 
-for b in Banner.objects.all():
-    print(f"Banner '{b.name}': {b.banner_type=}") #Check banner_type
-    
+    active_banners = Banner.objects.filter(is_active=True) # Get all active banners, or use some other logic to select banners to display
+    context = {'active_banners': active_banners} 
+    return render(request, 'lottery/home.html', context)
     #active_banners = Banner.objects.filter(is_active=True)  # Get all active banners
     #context = {'active_banners': active_banners}  # Pass them to the template
     #return render(request, 'lottery/home.html', context)  # New template: home.html
