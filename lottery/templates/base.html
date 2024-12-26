@@ -17,7 +17,6 @@
     <nav> <!--- Correct <nav> tag opening -->
         <a href="{% url 'home' %}">Home</a>
         <a href="{% url 'lottery:inventory' %}">Inventory</a>  <!--- Inventory link -->
-         <!---  Remove the <a href="{% url 'pull' %}">Pull</a> as individual banner pulls have specific URLs -->
         {% if user.is_authenticated %}
             <a href="{% url 'logout' %}">Logout</a>
         {% else %}
