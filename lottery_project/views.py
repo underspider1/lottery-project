@@ -124,20 +124,19 @@ def perform_pull(profile, banner):
 
 
         if rarity == 5:
-        if banner.banner_type == BannerType.STANDARD: 
-            item = random.choice(standard_banner.items.filter(rarity=5))
-
-        elif random.random() < 0.5 or guaranteed_featured_5star:
-            try:
-                item = random.choice(banner.featured.items.all().filter (rarity=5)) # Pick a featured 5* item.
-            except IndexError:
+            if banner.banner_type == BannerType.STANDARD:
                 item = random.choice(standard_banner.items.filter(rarity=5))
-            guaranteed_featured_5star = False
-            logger.exception("IndexError during item selection") # Correct and better error handling
-            return None       
-        else: # Lost 50/50
-            item = random.choice(standard_banner.items.filter(rarity=5))
-            guaranteed_featured_5star = True
+            elif random.random() < 0.5 or guaranteed_featured_5star:
+                try:
+                    item = random.choice(banner.featured.items.all().filter(rarity=5))
+                except IndexError:
+                    item = random.choice(standard_banner.items.filter(rarity=5))
+                    logger.exception("IndexError during item selection")  # Log the error
+                    return None   # Return None *only* if there's an IndexError
+                guaranteed_featured_5star = False  # Correct placement: set AFTER successful pull or handling the exception
+            else:  # Now reachable!
+                item = random.choice(standard_banner.items.filter(rarity=5))
+                guaranteed_featured_5star = True
 
             # Reset pity after selecting an item.
             if banner_type == BannerType.LIMITED_CHARACTER:
