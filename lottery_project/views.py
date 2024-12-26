@@ -11,7 +11,7 @@ def home_view(request):
     banners = Banner.objects.all()  # Correct: assign to 'banners'
     # Remove initial data creation from home_view. This should be done in migrations.
 
-    active_banners = Banner.objects.filter(is_active=True) # Get all active banners, or use some other logic to select banners to display
+    active_banners = banners.objects.filter(is_active=True) # Get all active banners, or use some other logic to select banners to display
     context = {'active_banners': active_banners} 
     return render(request, 'lottery/home.html', context)
     #active_banners = Banner.objects.filter(is_active=True)  # Get all active banners
@@ -118,7 +118,7 @@ def perform_pull(profile, banner):
         if rarity == 5:
 
             if banner.banner_type == BannerType.STANDARD: # Correct placement. If banner is standard, use items from standard banner
-                standard_banner = get_object_or_404 (Banner, banner_type=BannerType.STANDARD) #Banner.objects.get(banner_type=BannerType.STANDARD)
+                standard_banner = get_object_or_404(Banner, banner_type=BannerType.STANDARD)  #Banner.objects.get(banner_type=BannerType.STANDARD)
                 item = random.choice(standard_banner.items.filter(rarity=5))
             elif random.random() < 0.5 or guaranteed_featured_5star:
                 try:
