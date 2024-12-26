@@ -33,8 +33,8 @@ from django.contrib import messages
 
 
 def home_view(request):
-    banners = Banner.objects.all()
-if banners.count() == 0:
+    banner = Banner.objects.all()
+if banner.count() == 0:
     print("No banners exist.") #Check in your pythonanywhere server log is this is printed
 
 for b in Banner.objects.all():
