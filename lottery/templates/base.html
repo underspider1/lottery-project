@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>  <!--- Title block -->
+    <title>{% block title %}{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-    <!-- External Libraries – Best to keep these here for site-wide use -->
     <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" />
-
-
-</head>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.js"></script>  <!--- Restored Firebase UI Auth -->
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" /> <!--- Restored Firebase UI Auth CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    </head>
 <body>
+    <nav> <!--- Correct <nav> tag opening -->
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'lottery:inventory' %}">Inventory</a>  <!--- Inventory link -->
+         <!---  Remove the <a href="{% url 'pull' %}">Pull</a> as individual banner pulls have specific URLs -->
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a> <!--- Add login if not authenticated -->
+        {% endif %}
+    </nav> <!--- Correct </nav> tag closing -->
 
-    </nav>
     {% block content %}{% endblock %}
-
 
     {% csrf_token %}
     <script>  
-        const csrftoken = "{{ csrf_token }}"; // Or move this inside the <form> in pull.html
+        const csrftoken = "{{ csrf_token }}"; 
     </script>
 
-     <!--- Order does matter for javascript, if files depend on each other. Put most dependant at the end -->
     <script src="{% static 'js/firebase-init.js' %}" type="module"></script> 
-    <script src="{% static 'js/signout.js' %}" type="module"></script> <!--- Your scripts (moved to bottom and order changed) -->
-    <script src="{% static 'js/main.js' %}" type="module"></script> <!--- main.js last, if it depends on others-->
-
-    <script src="{% static 'js/register.js' %}" type="module"></script> <!--- These files are included only where needed. For example, include 'register.js' only in register.html template -->
-    <script src="{% static 'js/signin.js' %}" type="module"></script> <!--- These files are included only where needed. For example, include 'signin.js' only in login.html template -->
-
+    <script src="{% static 'js/signout.js' %}" type="module"></script> 
+    <script src="{% static 'js/main.js' %}" type="module"></script>
 
 </body>
 </html>

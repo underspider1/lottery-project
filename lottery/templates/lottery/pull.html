@@ -1,31 +1,33 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Gacha{% endblock %} 
+
+{% block title %}Gacha - {{ banner.name }}{% endblock %}  <!--- More descriptive title -->
 
 {% block content %}
 
     {% if banner %}
         <h1>{{ banner.name }}</h1>
 
-        <p>Gems: <span id="gems">{{ user.profile.balance }}</span> </p>
-
-        <select id="banner-select" style="display: none;">
-            <option value="{{ banner.id }}" selected>{{ banner.name }}</option>
-        </select>
-
-        <form id="pull-form" method="post" action="{% url 'pull' banner.id %}">
-            {% csrf_token %}
-            <button id="spin-button" type="submit">Pull!</button>
-            <div id="result"></div>  </form> <!--- Closing form tag added, div moved inside -->
-
-        {% if user.is_authenticated %} <!--- Conditionally include the script. -->
-            <script src="{% static 'js/pull.js' %}" type="module"></script> 
+        {% if banner.image %}
+            <img src="{{ banner.image.url }}" alt="{{ banner.name }} Image"> <!--- Banner Image -->
         {% endif %}
 
-    {% else %}  
-        <p>No banner selected or available.</p>  
+        <p>Gems: <span id="gems">{{ user.profile.balance }}</span></p> <!--- Removed redundant dropdown -->
+
+        <form id="pull-form" method="post" action="{% url 'lottery:pull' banner.id %}"> <!--- Namespaced URL -->
+            {% csrf_token %}
+            <button id="spin-button" type="submit">Pull!</button>
+            <div id="result"></div>
+        </form>
+
+        {% if user.is_authenticated %}
+            <script src="{% static 'js/pull.js' %}" type="module"></script>
+        {% endif %}
+
+    {% else %}
+        <p>No banner selected or available.</p>
     {% endif %}
 
-    <a href="{% url 'home' %}">Back Home</a> 
+    <a href="{% url 'home' %}">Back Home</a>
 
 {% endblock %}
