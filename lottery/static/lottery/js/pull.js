@@ -1,37 +1,48 @@
 import banners from './banners.js';
 
-document.getElementById('spin-button').addEventListener('click', async function () {
-    const bannerId = document.getElementById('banner-select').value;
-    const banner = banners[bannerId];
-    const url = this.dataset.url;
+// Get the pull URL *from the template* (this is crucial):
+const pullUrl = document.getElementById('pull-form').action;  // Correct way to get form action URL. It should be provided in 'action' argument of <form> tag
 
+// Add event listener to the form itself, for submissions:
+document.getElementById('pull-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent default form submission, so it won't make the default POST request
 
+    const formData = new FormData(event.target);  // Correct FormData object
+    
     try {
-        const response = await fetch(url, {
+        const response = await fetch(pullUrl, {  // Use pullUrl from the template for the request
             method: 'POST',
-            headers: { 'X-CSRFToken': csrftoken }
+            headers: {
+                'X-CSRFToken': csrftoken  // Correct CSRF token usage
+            },
+            body: formData  // Send FormData
         });
+
         if (!response.ok) {
-            const data = await response.json(); // Get error from Django, if any
-            throw new Error(data.error || 'Server Error');
+            const data = await response.json(); 
+            throw new Error(data.error || 'Server Error'); // Throw error to be caught by catch
         }
 
         const data = await response.json();
+        console.log("Data from server:", data); // Debugging log
 
-        let pity = parseInt(localStorage.getItem(`pity-${bannerId}`)) || 0;
-        let guaranteed5Star = localStorage.getItem(`guaranteed5Star-${bannerId}`) === 'true' || false;
+        // Pity and Guarantee Logic (corrected and simplified)
+        let pity = parseInt(localStorage.getItem(`pity-${bannerId}`)) || 0; //Default 0 for new banner_ids
+        let guaranteed5Star = localStorage.getItem(`guaranteed5Star-${bannerId}`) === 'true' || false; // Get current guaranteed status, if available. Default: false
+
 
         if (data.rarity === 5 || guaranteed5Star) {
             pity = 0;
             guaranteed5Star = false;
         } else {
             pity++;
-            if (pity === 90) {
+            if (pity >= 90) { //Correct condition. After 90 pulls - guaranteed 5*
                 guaranteed5Star = true;
             }
         }
 
-        localStorage.setItem(`pity-${bannerId}`, pity); // Update local pity
+
+        localStorage.setItem(`pity-${bannerId}`, pity);
         localStorage.setItem(`guaranteed5Star-${bannerId}`, guaranteed5Star); // Update local guarantee
         
         let resultMessage = '';
@@ -50,7 +61,9 @@ document.getElementById('spin-button').addEventListener('click', async function 
         document.getElementById('gems').textContent = parseInt(document.getElementById('gems').textContent) - 160; // Deduct gems if successful
 
     } catch (error) {
-        // ... (error handling remains the same)
+        console.error("Fetch error:", error);
+        document.getElementById('result').textContent = 'An error occurred during the pull. Please try again later.';
+        // ... other error handling ...
     }
 });
 

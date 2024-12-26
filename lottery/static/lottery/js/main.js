@@ -10,7 +10,7 @@ const userSpecificPullButton = document.getElementById('user-pull-button');
 if (userSpecificPullButton) {  // Add this check to avoid errors
     const bannerId = userSpecificPullButton.dataset.bannerId;
     userSpecificPullButton.addEventListener('click', () => {
-        window.location.href = `/pull/${bannerId}`;
+        window.location.href = `/pull/${bannerId}/`;  // Add the trailing slash
     });
 }
 
