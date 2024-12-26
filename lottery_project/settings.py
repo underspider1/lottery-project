@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'debug_toolbar',
     "lottery",
 ]
 
@@ -34,6 +35,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -74,6 +76,10 @@ DATABASES = {
         'PORT': os.environ.get('DATABASE_PORT', '3306'),
     }
 }
+
+INTERNAL_IPS = [
+    '127.0.0.1', # Add other local IPs as needed.
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
