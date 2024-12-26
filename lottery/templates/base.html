@@ -3,22 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>  <!--- Title block -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!--- Inside <head> -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <!-- External Libraries – Best to keep these here for site-wide use -->
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" />
+
+
 </head>
 <body>
-    <nav>
-    </nav>
 
+    </nav>
     {% block content %}{% endblock %}
 
 
-    {% csrf_token %} <!--- CSRF Token directly in template -->
-    <script>  <!--- Just before the closing </body> tag -->
-        const csrftoken = "{{ csrf_token }}";
+    {% csrf_token %}
+    <script>  
+        const csrftoken = "{{ csrf_token }}"; // Or move this inside the <form> in pull.html
     </script>
 
-    <script src="{% static 'js/my_script.js' %}"></script> <!--- JavaScript files at the end of the body -->
+     <!--- Order does matter for javascript, if files depend on each other. Put most dependant at the end -->
+    <script src="{% static 'js/firebase-init.js' %}" type="module"></script> 
+    <script src="{% static 'js/signout.js' %}" type="module"></script> <!--- Your scripts (moved to bottom and order changed) -->
+    <script src="{% static 'js/main.js' %}" type="module"></script> <!--- main.js last, if it depends on others-->
+
+    <script src="{% static 'js/register.js' %}" type="module"></script> <!--- These files are included only where needed. For example, include 'register.js' only in register.html template -->
+    <script src="{% static 'js/signin.js' %}" type="module"></script> <!--- These files are included only where needed. For example, include 'signin.js' only in login.html template -->
+
+
 </body>
 </html>

@@ -1,20 +1,10 @@
-{% extends 'base.html' %}  <!--- Add this line -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Inventory</title>  <!-- Add a title -->
-        {% load static %}  <!-- Load static if using static files -->
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Example: link your CSS -->
-</head>
-<body>
-    {% block content %} <!--- Wrap your content in a block -->
-  <div id="inventory-container">
+{% extends 'base.html' %}
+{% load static %}  
+{% block title %}Inventory{% endblock %} <!--- Set title for this page -->
+{% block content %}
+<div id="inventory-container">
     <h3>Your items</h3>
     <ul id="inventory-list"></ul>
-  </div>
-    {% endblock %}
-</body>
-</html>
+</div>
+
+{% endblock %}

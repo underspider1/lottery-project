@@ -1,11 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-
- <head>
-    <title>Pull</title>
- </head>
-<body>
+{% block title %}Gacha{% endblock %} 
     {% block content %}
         {% if banner %}
             <h1>{{ banner.name }}</h1>
@@ -31,5 +26,3 @@
         <script src="{% static 'js/pull.js' %}" type="module"></script>  <!--- JavaScript at the end -->
     
     {% endblock %}
-</body>
-</html>
