@@ -1,15 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from lottery.models import Banner, Item, UserInventory, Profile
+from lottery.models import Banner, Item, UserInventory, Profile, BannerType
 import random
 from django.contrib import messages
-
-# Constants for banner types
-LIMITED_CHARACTER_BANNER_1 = 1
-LIMITED_CHARACTER_BANNER_2 = 2
-LIMITED_WEAPON_BANNER = 3
-STANDARD_BANNER = 4
 
 STANDARD_BANNER = Banner.objects.get(name="Standard")
 
@@ -41,7 +35,7 @@ except Banner.DoesNotExist:
 def home_view(request):
     first_banner = Banner.objects.filter(is_active=True).order_by('id').first()
     if first_banner:
-        return redirect('pull', banner_id=first_banner.pk)
+        return redirect('pull', banner_type=first_banner.pk)
     else:
         return render(request, 'no_banners.html')
 
@@ -77,10 +71,10 @@ def pull_view(request, banner_id):
 
             response_data = {  # Include updated balance and pity information
                 'items': serialized_items,
-                'pity_counter': profile.character_pity_counter if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2 else profile.weapon_pity_counter if banner_id == LIMITED_WEAPON_BANNER else profile.standard_pity_counter,
+                'pity_counter': profile.character_pity_counter if banner.banner_type == BannerType.LIMITED_CHARACTER else profile.weapon_pity_counter if banner.banner_type == BannerType.LIMITED_WEAPON else profile.standard_pity_counter,
                 'guaranteed_4star_or_above': profile.guaranteed_4star_or_above,
                 'guaranteed_featured_4star': profile.guaranteed_featured_4star,
-                'guaranteed_featured_5star': profile.guaranteed_featured_5star_character if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2 else profile.guaranteed_featured_5star_weapon if banner_id == LIMITED_WEAPON_BANNER else False,
+                'guaranteed_featured_5star': profile.guaranteed_featured_5star_character if banner.banner_type == BannerType.LIMITED_CHARACTER else profile.guaranteed_featured_5star_weapon if banner.banner_type == BannerType.LIMITED_WEAPON else False,
                 'balance': profile.balance,  # Updated balance
 
             }
@@ -92,19 +86,21 @@ def pull_view(request, banner_id):
     return render(request, 'lottery/pull.html', {'banner': banner})
 
 
-def perform_pull(profile, banner, banner_id):
-    # Determine pity_counter, guaranteed_featured_5star, soft_pity, hard_pity
-    if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2:
+def perform_pull(profile, banner):
+    banner_type = banner.banner_type
+
+    # Determine pity_counter, guaranteed_featured_5star, soft_pity, hard_pity based on banner_type    
+    if banner_type == BannerType.LIMITED_CHARACTER:
         pity_counter = profile.character_pity_counter
         guaranteed_featured_5star = profile.guaranteed_featured_5star_character
         soft_pity = 74
         hard_pity = 90
-    elif banner_id == LIMITED_WEAPON_BANNER:
+    elif banner_type == BannerType.LIMITED_WEAPON:
         pity_counter = profile.weapon_pity_counter
         guaranteed_featured_5star = profile.guaranteed_featured_5star_weapon
         soft_pity = 64
         hard_pity = 80
-    elif banner_id == STANDARD_BANNER: # Correct placement
+    elif banner_type == BannerType.STANDARD: # Correct placement
         pity_counter = profile.standard_pity_counter
         guaranteed_featured_5star = False
         soft_pity = 74
@@ -142,24 +138,26 @@ def perform_pull(profile, banner, banner_id):
     try:
         if rarity == 5:
 
-            if banner_id == STANDARD_BANNER: # Correct placement. If banner is standard, use items from standard banner
-                item = random.choice(STANDARD_BANNER.items.filter(rarity=5)) # Use cached banner instance.
+            if banner.banner_type == BannerType.STANDARD: # Correct placement. If banner is standard, use items from standard banner
+                standard_banner = Banner.objects.get(banner_type=BannerType.STANDARD)
+                item = random.choice(standard_banner.items.filter(rarity=5))
             elif random.random() < 0.5 or guaranteed_featured_5star:
                 try:
-                    item = random.choice(banner.items.filter(rarity=5, is_featured=True))
+                    item = random.choice(banner.featured.items.all().filter (rarity=5))
                 except IndexError:
-                    item = random.choice(STANDARD_BANNER.items.filter(rarity=5)) # Use the cached banner.
+                    item = random.choice(standart_banner.items.filter(rarity=5)) # Use the cached banner.
                 guaranteed_featured_5star = False
             else:
-                item = random.choice(STANDARD_BANNER.items.filter(rarity=5)) # Use cached banner.
+                standard_banner = Banner.objects.get(banner_type=BannerType.STANDARD)
+                item = random.choice(standart_banner.items.filter(rarity=5)) # Use cached banner.
                 guaranteed_featured_5star = True
 
             # Reset pity after selecting an item.
-            if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2:
+            if banner_type == BannerType.LIMITED_CHARACTER:
                 profile.character_pity_counter = 0
-            elif banner_id == LIMITED_WEAPON_BANNER:
+            elif banner_type == BannerType.LIMITED_WEAPON:
                 profile.weapon_pity_counter = 0
-            elif banner_id == STANDARD_BANNER: #Update standard banner pity as well.
+            elif banner_type == BannerType.STANDARD: #Update standard banner pity as well.
                 profile.standard_pity_counter = 0
         elif rarity == 4:
             if random.random() < 0.5 or guaranteed_featured_4star:
@@ -210,13 +208,19 @@ def perform_pull(profile, banner, banner_id):
 
 
 
-        if rarity != 5:  #Correct indentation and placement. Update pity AFTER guaranteed_4star_or_above is handled.
-            if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2:
+        if rarity != 5 and profile.guaranteed_4star_or_above < 9:     #Correct indentation and placement. Update pity AFTER guaranteed_4star_or_above is handled.
+            if banner.banner_type == BannerType.LIMITED_CHARACTER:
                 profile.character_pity_counter += 1
-            elif banner_id == LIMITED_WEAPON_BANNER:
+            elif banner.banner_type == BannerType.LIMITED_WEAPON:
                 profile.weapon_pity_counter += 1
-            elif banner_id == STANDARD_BANNER:
+            elif banner.banner_type == BannerType.STANDARD:
                 profile.standard_pity_counter += 1
+        
+            profile.guaranteed_4star_or_above += 1 
+                 
+        if rarity == 4 or rarity == 5:
+            profile.guaranteed_4star_or_above = 0
+        elif guaranteed_4star_or_above == 9 and rarity == 3:         
 
         # Update guarantees AFTER item selection, pity updates, and guaranteed_4star_or_above logic.
         profile.guaranteed_featured_4star = guaranteed_featured_4star  # Correct placement
@@ -228,9 +232,9 @@ def perform_pull(profile, banner, banner_id):
         return None
 
     # ... (previous code)
-    if banner_id == LIMITED_CHARACTER_BANNER_1 or banner_id == LIMITED_CHARACTER_BANNER_2:
+    if banner.banner_type == BannerType.LIMITED_CHARACTER:
         profile.guaranteed_featured_5star_character = guaranteed_featured_5star
-    elif banner_id == LIMITED_WEAPON_BANNER:
+    elif banner.banner_type == BannerType.LIMITED_WEAPON:
         profile.guaranteed_featured_5star_weapon = guaranteed_featured_5star
 
     profile.save()

@@ -17,6 +17,11 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance, balance=16000, pity_counter = 0)
 
+class BannerType(models.TextChoices):
+    LIMITED_CHARACTER = 'limited_character', 'Limited Character'
+    LIMITED_WEAPON = 'limited_weapon', 'Limited Weapon'
+    STANDARD = 'standard', 'Standard'
+    
 class Banner(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -25,6 +30,11 @@ class Banner(models.Model):
     start_date = models.DateTimeField(null=True, blank=True)  # New
     end_date = models.DateTimeField(null=True, blank=True)  # New
     featured_items = models.ManyToManyField('Item', related_name='featured_in_banners')
+    banner_type = models.CharField(
+        max_length=20,  # Make sure this is long enough for your longest choice
+        choices=BannerType.choices,
+        default=BannerType.STANDARD, 
+    )
 
 class Item(models.Model):
     name = models.CharField(max_length=255)
