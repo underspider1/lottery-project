@@ -182,9 +182,10 @@ def perform_pull(profile, banner):
 
         if guaranteed_4star_or_above > 0:  #Check if guarantee is active
             if rarity == 4 or rarity == 5:  # Correct condition: reset only if 4* or 5* is pulled
-                guaranteed_4star_or_above = 0  # Correct logic and placement.
+                profile.guaranteed_4star_or_above = 0  # Correct logic and placement.
         elif guaranteed_4star_or_above == 9 and rarity == 3:  # Correct condition and placement. Guaranteed 4* or 5* on the next pull
             guaranteed_4star_or_above = 0 # Reset the counter, next will be guaranteed 4* or 5*
+            
             if random.random() < 0.06:  # 6% for 5-star. No soft pity here.
                 rarity = 5
                 # ... (same logic as in rarity == 5 block, including pity reset)
@@ -218,9 +219,11 @@ def perform_pull(profile, banner):
         
             profile.guaranteed_4star_or_above += 1 
                  
-        if rarity == 4 or rarity == 5:
-            profile.guaranteed_4star_or_above = 0
-        elif guaranteed_4star_or_above == 9 and rarity == 3:         
+        elif guaranteed_4star_or_above < 9 and rarity == 3:  #Correct condition: if guaranteed_4star_or_above < 9 (thus not guaranteed 4* on next pull) and 3* is pulled - increment pity
+            guaranteed_4star_or_above += 1  #Correct placement: increment is here
+
+
+        if rarity != 5 and profile.guaranteed_4star_or_above < 9:       
 
         # Update guarantees AFTER item selection, pity updates, and guaranteed_4star_or_above logic.
         profile.guaranteed_featured_4star = guaranteed_featured_4star  # Correct placement
