@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_view, name='home'),  # Project-level view
     path('lottery/', include('lottery.urls')),   # Includes URLs from lottery/urls.py
-path('accounts/', include('django.contrib.auth.urls', namespace='auth')),
+    path('accounts/', include('django.contrib.auth.urls', namespace='auth')),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
 
