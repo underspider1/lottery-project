@@ -6,11 +6,10 @@ from lottery_project import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home_view, name='home'),  # Homepage
-    path('auth/', include('django.contrib.auth.urls')), 
-    path('lottery/', include('lottery.urls')),  # Lottery app URLs with prefix
-    path('accounts/', include('django.contrib.auth.urls')), # Built in authentication views
-    path('__debug__/', include('debug_toolbar.urls')),  # Debug toolbar
+    path('', views.home_view, name='home'),
+    path('lottery/', include('lottery.urls')), # Best practice: add the app's name as a URL prefix 
+    path('accounts/', include('django.contrib.auth.urls')),  # Keep this
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 if settings.DEBUG:
