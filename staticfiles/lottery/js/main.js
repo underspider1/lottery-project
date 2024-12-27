@@ -2,34 +2,33 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import * as firebaseui from 'firebaseui';
 
 
-// Initialize FirebaseUI Auth
-// This initialization can remain outside the onAuthStateChanged callback.
+
 const ui = new firebaseui.auth.AuthUI(getAuth());
 
 const userSpecificPullButton = document.getElementById('user-pull-button');
-if (userSpecificPullButton) {  // Add this check to avoid errors
+if (userSpecificPullButton) {  
     const bannerId = userSpecificPullButton.dataset.bannerId;
     userSpecificPullButton.addEventListener('click', () => {
-        window.location.href = `/pull/${bannerId}/`;  // Add the trailing slash
+        window.location.href = `/pull/${bannerId}/`;
     });
 }
 
 const uiConfig = {
     callbacks: {
         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-            return true; // Continue to the redirect (handled in onAuthStateChanged)
+            return true; 
         },
         uiShown: function () {
-            // Hide any loader you might be using
+            
         }
     },
-    signInFlow: 'popup', // Use popup for sign-in
+    signInFlow: 'popup',
     signInOptions: [
-        firebaseui.auth.EmailAuthProvider.PROVIDER_ID, // Include Email/Password provider
-        // Add other providers as needed (Google, Facebook, etc.)
+        firebaseui.auth.EmailAuthProvider.PROVIDER_ID, 
+        
     ],
 
-    // ... other UI config options (tosUrl, privacyPolicyUrl, etc.)
+   
 
 };
 
@@ -51,10 +50,10 @@ onAuthStateChanged(getAuth(), (user) => {
 
 
 
-        // ... rest of the signed-in user logic (add logout button, etc.)
+     
 
     } else {
-        // No user is signed in.  Render the FirebaseUI widget
+   
 
         let firebaseUiContainer = document.getElementById('firebaseui-auth-container');
         if (!firebaseUiContainer) {
@@ -63,8 +62,8 @@ onAuthStateChanged(getAuth(), (user) => {
             document.body.appendChild(firebaseUiContainer);
         }
 
-        // Now, start FirebaseUI targeting the container
-        ui.start('#firebaseui-auth-container', uiConfig);  // MUST be called when no user
+      
+        ui.start('#firebaseui-auth-container', uiConfig);
 
     }
 });

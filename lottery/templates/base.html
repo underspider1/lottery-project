@@ -20,7 +20,7 @@
         {% if user.is_authenticated %}
         <a href="{% url 'auth:logout' %}">Logout</a>
         {% else %}
-            <a href="{% url 'login' %}">Login</a> <!--- Add login if not authenticated -->
+        <a href="{% url 'auth:login' %}">Login</a> <!--- Add login if not authenticated -->
         {% endif %}
     </nav> <!--- Correct </nav> tag closing -->
 

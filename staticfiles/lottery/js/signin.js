@@ -9,9 +9,9 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed in 
+           
             console.log("User signed in:", userCredential.user);
-            // Redirect, update UI, etc., based on successful login
+           
             window.location.pathname = '/';
 
         })
@@ -19,7 +19,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             const errorCode = error.code;
             const errorMessage = error.message;
 
-            // Enhanced error handling – display errors next to the input fields:
+           
             if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
                 document.getElementById('password-error').textContent = "Invalid email or password";
                 document.getElementById('email-error').textContent = "Invalid email or password";
