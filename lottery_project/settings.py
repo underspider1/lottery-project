@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
+SECRET_KEY = SECRET_KEY="ozhqjc%n@#y67o7!+rk9cs123%_x(wmm+*q@4n&6rlfb#tpzc0"
 
 
 DEBUG = True
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'debug_toolbar',
+    "debug_toolbar",
     "lottery",
 ]
 
