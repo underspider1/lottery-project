@@ -18,9 +18,9 @@
         <a href="{% url 'home' %}">Home</a>
         <a href="{% url 'lottery:inventory' %}">Inventory</a>  <!--- Inventory link -->
         {% if user.is_authenticated %}
-        <a href="{% url 'auth:logout' %}">Logout</a>
+        <a href="{% url 'auth:logout' %}">logout</a>
         {% else %}
-        <a href="{% url 'auth:login' %}">Login</a> <!--- Add login if not authenticated -->
+        <a href="{% url 'auth:login' %}">login</a> <!--- Add login if not authenticated -->
         {% endif %}
     </nav> <!--- Correct </nav> tag closing -->
 
